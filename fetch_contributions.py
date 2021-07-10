@@ -46,6 +46,7 @@ class Fetch_PullRequests:
         else:
             for number in range(1, int(number_of_pages[0]) + 1):
                 page_ = requests.get(self.URL + f"?page={number}")
+                tree = html.fromstring(page_.content)
                 Repositories.extend(tree.xpath(
                     '//*[contains(concat( " ", @class, " " ), concat( " ", "wb-break-all", " " ))]//*[contains(concat( " ", @class, " " ), concat( " ", "d-inline-block", " " ))]/text()'))
 
@@ -120,7 +121,8 @@ class Fetch_PullRequests:
         dataframe['Status(Merged/Closed/Open)'] = dataframe['Status(Merged/Closed/Open)'].astype(str).str.replace(
             " pull request",
             "", regex=False)
-        dataframe['Link of PR'] = dataframe['Link of PR'].astype(str)
+        if dataframe['Link of PR'].dtype!="O":
+            dataframe['Link of PR'] = dataframe['Link of PR'].astype(str)
         dataframe['Link of PR'] = 'https://github.com' + dataframe['Link of PR']
 
         return dataframe
@@ -147,14 +149,12 @@ class Fetch_PullRequests:
 
         if len(markdown) > 0:
             # creating a markdown file
-            markdown_file = open(f"{self.filename}.md", "w")
-            n = markdown_file.write(markdown)
-            markdown_file.close()
+            with open(f"{self.filename}.md", "w") as markdown_file:
+                markdown_file.write(markdown)
 
             return "Markdown File is successfully stored"
 
-        else:
-            return "No pull requests found !!"
+        return "No pull requests found !!"
 
 
 if __name__ == "__main__":
@@ -167,11 +167,11 @@ if __name__ == "__main__":
     parser.add_argument("filename", type=str, nargs="?", help="filename to store the markdown table")
     args = parser.parse_args()
     if args.filename:
-        filename = args.filename
+        file_name = args.filename
     else:
-        filename = "Markdown_file"
+        file_name = "Markdown_file"
     if args.username and args.organization:
-        response = Fetch_PullRequests(args.user, args.organization_name, filename)
+        response = Fetch_PullRequests(args.user, args.organization_name, file_name)
         print(response.get_pullrequests())
     else:
         print("Please pass atleast two arguments: '--username', '--organisation'")
