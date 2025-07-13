@@ -1,4 +1,4 @@
-![](https://github.com/kadatatlukishore/Fetch-Contributions/blob/main/open-source-software.png)
+![](https://github.com/K-OS-Dev/Fetch-Contributions/blob/main/open-source-software.png)
 
 # Fetch contributions
 It's a Python script to fetch the pull requests made by a github user in an Organization. It helps organization members to keep record of a particular 
@@ -26,4 +26,4 @@ python3 fetch_contributions.py --username <Username> --organization <Organizatio
 ```
 
 # AUTHOR 
-[**K Kishore**](https://www.linkedin.com/in/kadatatlukishore/)
+**OSDev**
